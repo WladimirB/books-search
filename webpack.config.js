@@ -41,15 +41,35 @@ module.exports = {
         enforce: 'pre',
         use: [
           {
-            loader: 'ts-loader'
+            loader: 'ts-loader',
+            // options: {
+            //   transpileOnly: true
+            // }
           },
         ],
       },
+      {
+        test: /\.(png|jpg|gif)$/i,
+        use: [
+           {
+             loader: 'url-loader',
+             options: {
+               limit: 8192,
+             }
+           },
+         ],
+         type: 'javascript/auto'
+      },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      }
     ],
   },
   resolve: {
     alias: {
-      utils: path.resolve(__dirname, './src/utils')
+      utils: path.resolve(__dirname, './src/utils'),
+      assets: path.resolve(__dirname, './src/assets')
     },
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx']
   },
