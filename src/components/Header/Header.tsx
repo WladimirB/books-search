@@ -6,6 +6,7 @@ import FormLib from '../Form'
 
 import HeaderBg from 'assets/images/header.jpg'
 import { Container } from '../UI'
+import { object, nonempty, string } from 'superstruct'
 
 const { Input, Select } = FormLib
 
@@ -15,6 +16,10 @@ const Styled = styled.header`
   min-height: 200px;
   color: #fff;
   background: url(${HeaderBg}) center / 100% auto no-repeat;
+
+  .form-container {
+    max-width: 800px;
+  }
 
   .header-form {
     display: flex;
@@ -41,6 +46,14 @@ interface ISearchData {
 
 interface IHeaderProps extends Omit<IUIProps, 'children'> {}
 
+const validationSchema = object({
+  search: nonempty(string()),
+})
+
+function validation() {
+  return validationSchema
+}
+
 export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
   const { state, handlers } = FormLib.useFormState<ISearchData>({
     initialState: {},
@@ -48,13 +61,14 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
 
   return (
     <Styled className={className} style={style}>
-      <Container>
+      <Container className='form-container'>
         <FormLib.Form
           onSubmit={(val) => {
             console.log('v', val)
           }}
           className='header-form'
           formEntity={{ state, handlers }}
+          useValdation={validation}
         >
           <FormLib.FormItem
             className='header-form__item header-form__item_full-width'

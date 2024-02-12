@@ -7,6 +7,10 @@ const Styled = styled.div`
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
+
+  .form__validation-error {
+    color: red;
+  }
 `
 
 interface IFormItemProps extends Omit<IUIProps, 'children'> {
@@ -42,9 +46,10 @@ const getChildren = (child: React.ReactElement) => {
 }
 
 export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...rest }) => {
-  const { state, handlers } = React.useContext<IFormContext>(FormContext)
+  const { state, handlers, errors } = React.useContext<IFormContext>(FormContext)
 
   const value = state?.[name as keyof typeof state] || null
+  const error = errors?.[name as keyof typeof errors]
   const handleChange = (value: any) => handlers.updateValues({ name: name, value: value })
 
   const injectionProps: IInputProps = {
@@ -67,6 +72,7 @@ export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...r
     <Styled {...rest}>
       {label && <label>{label}</label>}
       {element}
+      {errors && <small className='form__validation-error'>{error}</small>}
     </Styled>
   )
 }

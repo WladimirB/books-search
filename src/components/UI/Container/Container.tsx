@@ -39,6 +39,7 @@ const Responsive = styled(FullWidth)`
 
 export const Container: React.FC<IContainerProps> = ({ style, className, fullWidth, children }) => {
   const classes = className ? replaceSameClasses(className) : undefined
+
   return fullWidth ? (
     <FullWidth style={style} className={classes}>
       {children}
