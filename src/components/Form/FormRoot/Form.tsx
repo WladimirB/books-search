@@ -41,18 +41,20 @@ export const Form: React.FC<IFormProps> = ({
 
   const submit = (ev: FormEvent<HTMLFormElement>) => {
     ev.preventDefault()
-    validationSchema && validate()
-    onSubmit?.(formEntity.state)
+    const isValid = validationSchema ? validate() : true
+    if (isValid) {
+      onSubmit?.(formEntity.state)
+    }
   }
 
   const validate = React.useCallback(() => {
-    console.log('call')
     if (!validationSchema) {
-      return
+      return true
     }
     try {
       assert(formEntity.state, validationSchema)
       setErrors({})
+      return true
     } catch (error) {
       if (error instanceof StructError) {
         const errorObj = error.failures().reduce(
@@ -63,10 +65,11 @@ export const Form: React.FC<IFormProps> = ({
           {},
         )
         setErrors(errorObj as IErrors<keyof typeof formEntity.state>)
-        return errorObj
+        return false
       }
+      return true
     }
-    return {}
+    return true
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [formEntity.state, validationSchema])
 

@@ -6,7 +6,9 @@ import FormLib from '../Form'
 
 import HeaderBg from 'assets/images/header.jpg'
 import { Container } from '../UI'
-import { object, nonempty, string } from 'superstruct'
+import { object, string, define, optional } from 'superstruct'
+import { useDispatch } from 'react-redux'
+import { changeFilter } from 'store/books/actions'
 
 const { Input, Select } = FormLib
 
@@ -41,13 +43,18 @@ const Styled = styled.header`
 
 interface ISearchData {
   search: string
-  another: string
+  category: string
+  order: string
 }
 
 interface IHeaderProps extends Omit<IUIProps, 'children'> {}
 
+const isRequired = () => define('isRequired', (value) => !!value || 'This field mustn`t be empty')
+
 const validationSchema = object({
-  search: nonempty(string()),
+  search: isRequired(),
+  category: optional(string()),
+  order: optional(string()),
 })
 
 function validation() {
@@ -56,15 +63,19 @@ function validation() {
 
 export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
   const { state, handlers } = FormLib.useFormState<ISearchData>({
-    initialState: {},
+    initialState: {
+      category: 'poetry',
+      order: 'newest',
+    },
   })
+  const dispatch = useDispatch()
 
   return (
     <Styled className={className} style={style}>
       <Container className='form-container'>
         <FormLib.Form
           onSubmit={(val) => {
-            console.log('v', val)
+            dispatch(changeFilter(val as ISearchData))
           }}
           className='header-form'
           formEntity={{ state, handlers }}
@@ -94,7 +105,7 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
             <Select
               options={[
                 { value: 'newest', label: 'Newest' },
-                { value: 'rev', label: 'Revelance' },
+                { value: 'revelance', label: 'Revelance' },
               ]}
             />
           </FormLib.FormItem>
