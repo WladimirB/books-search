@@ -7,9 +7,8 @@ import FormLib from '../Form'
 import HeaderBg from 'assets/images/header.jpg'
 import { Container } from '../UI'
 import { object, string, define, optional } from 'superstruct'
-import { useDispatch } from 'react-redux'
 import { searchBooks } from 'store/books/actions'
-import instance from 'data'
+import { useAppDispatch } from 'hooks/useStoreHooks'
 
 const { Input, Select } = FormLib
 
@@ -45,7 +44,7 @@ const Styled = styled.header`
 interface ISearchData {
   search: string
   category: string
-  order: string
+  order: 'newest' | 'revelance'
 }
 
 interface IHeaderProps extends Omit<IUIProps, 'children'> {}
@@ -69,23 +68,14 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
       order: 'newest',
     },
   })
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   return (
     <Styled className={className} style={style}>
       <Container className='form-container'>
         <FormLib.Form
           onSubmit={(val) => {
-            instance.get('', {
-              params: {
-                q: `${state.search}${
-                  state.category && state.category !== 'all' ? '+subject:' + state.category : ''
-                }`,
-                maxResults: 40,
-                startIndex: 1,
-                orderBy: state.order,
-              },
-            })
+            dispatch(searchBooks(val as ISearchData))
           }}
           className='header-form'
           formEntity={{ state, handlers }}

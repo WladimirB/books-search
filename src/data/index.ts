@@ -1,7 +1,21 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import store from 'store'
 import { showError } from 'store/snackbar/actions'
+import { IBookModel } from './models/booksModel'
 
+interface IParams {
+  search: string
+  subject?: string
+  orderBy: 'newest' | 'revelance'
+  page: number
+}
+
+interface GetBooksResponse {
+  totalItems: number
+  items: IBookModel[]
+}
+
+const offset = 40
 const baseUrl = 'https://www.googleapis.com/books/v1/volumes'
 
 const instance = axios.create({
@@ -31,4 +45,15 @@ instance.interceptors.response.use(
   },
 )
 
-export default instance
+export const getBooks = (params: IParams): Promise<AxiosResponse<GetBooksResponse>> => {
+  const { search, subject = '', orderBy, page } = params
+
+  return instance.get('', {
+    params: {
+      q: `${search}${subject ? '+subject:' + subject : ''}`,
+      maxResults: offset,
+      startIndex: page > 1 ? offset * (page - 1) : 0,
+      orderBy,
+    },
+  })
+}

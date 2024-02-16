@@ -1,8 +1,12 @@
-import { Container } from '../UI'
+import { Card, Container } from '../UI'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { RootState } from 'store'
+import { selectors } from 'store'
 import styled from 'styled-components'
+
+const MainContainer = styled(Container)`
+  padding: 15px;
+`
 
 const Center = styled.div`
   display: flex;
@@ -13,21 +17,41 @@ const Center = styled.div`
   height: calc(100vh - 300px);
 `
 
+const Row = styled.div`
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  margin: 0 -10px;
+  row-gap: 20px;
+`
+
+const Col = styled.div`
+  width: 33.3%;
+  padding: 0 10px;
+`
+
 export const Main: React.FC = () => {
-  const { isLoading, filter } = useSelector((state: RootState) => state.books)
+  const isLoading = useSelector(selectors.isBooksLoading)
+  const books = useSelector(selectors.booksSelector)
+  const showLoading = isLoading && !books.length
+
   return (
-    <Container>
-      <Center>
-        {isLoading
-          ? 'Loading'
-          : Object.keys(filter).map((objKey, index) => {
-              return (
-                <span key={index}>
-                  {objKey}:{filter[objKey]}
-                </span>
-              )
-            })}
-      </Center>
-    </Container>
+    <MainContainer>
+      {showLoading && <Center>{'Loading'}</Center>}
+      {books.length > 0 && (
+        <Row>
+          {books.map((book) => (
+            <Col key={book.id}>
+              <Card
+                image={book.volumeInfo?.imageLinks?.thumbnail || ''}
+                title={book.volumeInfo?.title || ''}
+                authors={book.volumeInfo?.authors || []}
+                categories={book.volumeInfo?.categories}
+              />
+            </Col>
+          ))}
+        </Row>
+      )}
+    </MainContainer>
   )
 }

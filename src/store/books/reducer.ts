@@ -1,6 +1,7 @@
 import { AppAction } from 'store/type'
 
 import * as actionTypes from './action_types'
+import { IBookModel } from 'data/models/booksModel'
 
 export interface IBooksState {
   filter: {
@@ -10,8 +11,9 @@ export interface IBooksState {
   }
   error?: Error | null
   isLoading: boolean
-  items: Array<any>
+  items: IBookModel[]
   page: number
+  totalCount: number | null
 }
 
 const initialState = {
@@ -24,18 +26,28 @@ const initialState = {
   isLoading: false,
   items: [],
   page: 1,
+  totalCount: null,
 }
 
-export const booksReducer = (state = initialState, action: AppAction<any>): IBooksState => {
+export const booksReducer = (
+  state: IBooksState = initialState,
+  action: AppAction<any>,
+): IBooksState => {
   switch (action.type) {
     case actionTypes.CHANGE_FILTER:
-      return { ...state, filter: action.payload, items: [], page: 1 }
+      return { ...state, filter: action.payload, items: [], page: 1, totalCount: null }
     case actionTypes.LOADING:
       return { ...state, isLoading: true }
     case actionTypes.LOADED_ERROR:
       return { ...state, isLoading: false, error: action.error }
     case actionTypes.LOADED_SUCCESS:
-      return { ...state, isLoading: false, error: null, items: [...state.items, action.payload] }
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+        items: [...state.items, ...action.payload.items],
+        totalCount: action.payload.totalCount,
+      }
     case actionTypes.NEXT_PAGE:
       return { ...state, page: state.page + 1 }
     default:

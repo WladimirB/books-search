@@ -1,16 +1,17 @@
 import * as actionTypes from './action_types'
-import { AppAction, DispatchType } from '../type'
+import { DispatchType } from '../type'
 import { RootState } from 'store'
-import { delay } from 'utils/delay'
+import { getBooks } from 'data'
+import { IBookModel } from 'data/models/booksModel'
 
-export interface IFilter {
+interface IFilter {
   search: string
-  order: string
+  order: 'newest' | 'revelance'
   category: string
 }
 
 export const loading = () => ({ type: actionTypes.LOADING })
-export const success = (payload: Array<any>): AppAction => ({
+export const success = (payload: { items: IBookModel[]; totalCount: number }) => ({
   type: actionTypes.LOADED_SUCCESS,
   payload,
 })
@@ -22,14 +23,21 @@ const changeFilter = (fiter: IFilter) => ({
 
 const loadBooks = (fiter: IFilter) => {
   return async (dispatch: DispatchType, getState: () => RootState) => {
-    const { isLoading } = getState().books
+    const { isLoading, page } = getState().books
     if (isLoading) {
       return
     }
     dispatch(loading())
     try {
-      await delay(3000)
-      dispatch(success([]))
+      const response = await getBooks({
+        search: fiter.search,
+        orderBy: fiter.order,
+        subject: fiter.category === 'all' ? undefined : fiter.category,
+        page,
+      })
+      console.log('r', response.data)
+      const { items = [], totalItems = 0 } = response.data
+      dispatch(success({ items, totalCount: totalItems }))
     } catch (error: any) {
       dispatch(error(error))
     }
