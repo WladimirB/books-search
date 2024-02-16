@@ -2,7 +2,7 @@ import { AppAction } from 'store/type'
 
 import * as actionTypes from './action_types'
 
-interface IBooksState {
+export interface IBooksState {
   filter: {
     search: string
     category?: string
@@ -21,7 +21,7 @@ const initialState = {
     order: 'newest',
   },
   error: null,
-  isLoading: true,
+  isLoading: false,
   items: [],
   page: 1,
 }
@@ -29,7 +29,7 @@ const initialState = {
 export const booksReducer = (state = initialState, action: AppAction<any>): IBooksState => {
   switch (action.type) {
     case actionTypes.CHANGE_FILTER:
-      return { ...state, filter: action.payload, items: [] }
+      return { ...state, filter: action.payload, items: [], page: 1 }
     case actionTypes.LOADING:
       return { ...state, isLoading: true }
     case actionTypes.LOADED_ERROR:

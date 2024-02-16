@@ -8,7 +8,8 @@ import HeaderBg from 'assets/images/header.jpg'
 import { Container } from '../UI'
 import { object, string, define, optional } from 'superstruct'
 import { useDispatch } from 'react-redux'
-import { changeFilter } from 'store/books/actions'
+import { searchBooks } from 'store/books/actions'
+import instance from 'data'
 
 const { Input, Select } = FormLib
 
@@ -75,7 +76,16 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
       <Container className='form-container'>
         <FormLib.Form
           onSubmit={(val) => {
-            dispatch(changeFilter(val as ISearchData))
+            instance.get('', {
+              params: {
+                q: `${state.search}${
+                  state.category && state.category !== 'all' ? '+subject:' + state.category : ''
+                }`,
+                maxResults: 40,
+                startIndex: 1,
+                orderBy: state.order,
+              },
+            })
           }}
           className='header-form'
           formEntity={{ state, handlers }}

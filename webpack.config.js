@@ -1,5 +1,6 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const Dotenv = require('dotenv-webpack');
 
 module.exports = {
   entry: './src/index.tsx',
@@ -63,6 +64,10 @@ module.exports = {
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
+      },
+      { 
+        test: /\.svg$/,
+        use: ['@svgr/webpack', 'url-loader'],
       }
     ],
   },
@@ -70,7 +75,9 @@ module.exports = {
     alias: {
       utils: path.resolve(__dirname, './src/utils'),
       assets: path.resolve(__dirname, './src/assets'),
-      store: path.resolve(__dirname, './src/store')
+      store: path.resolve(__dirname, './src/store'),
+      hooks: path.resolve(__dirname, './src/hooks'),
+      data: path.resolve(__dirname, './src/data')
     },
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx']
   },
@@ -78,5 +85,6 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
     }),
+    new Dotenv(),
   ],
 }

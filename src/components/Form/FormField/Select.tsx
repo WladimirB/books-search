@@ -19,9 +19,9 @@ export const Select: React.FC<ISelectProps> = ({ options, onChange, value, ...re
   }
 
   return (
-    <select onChange={handleChange} {...rest}>
+    <select onChange={handleChange} {...rest} value={value || undefined}>
       {options.map((option) => (
-        <option value={option.value} key={option.value} selected={value === option.value}>
+        <option value={option.value} key={option.value}>
           {option.label}
         </option>
       ))}
