@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 interface ICardProps {
   image: string
@@ -39,13 +40,15 @@ const Spacer = styled.div`
 export const Card: React.FC<ICardProps> = ({ image, authors, categories, title }) => {
   return (
     <CardWrapper>
-      <img src={image} alt={title} />
+      <LazyLoadImage alt={title} src={image} height={128} width={'auto'} />
       <Title>{title}</Title>
       <Spacer />
-      {authors.map((author) => (
+      {authors.slice(0, 4).map((author) => (
         <Author key={author}>{author}</Author>
       ))}
-      {categories && categories.length && <span>{categories[0]}</span>}
+      {categories && categories.length && (
+        <span style={{ marginTop: '15px' }}>{categories[0]}</span>
+      )}
     </CardWrapper>
   )
 }

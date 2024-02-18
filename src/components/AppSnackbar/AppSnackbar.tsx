@@ -13,6 +13,7 @@ export const AppSnackbar: React.FC = () => {
       onClose={() => dispatch(closeSnackbar())}
       type={snackBarState.type}
       isShow={!!snackBarState.message}
+      duration={5000}
     >
       {snackBarState.message || ''}
     </SnackBar>

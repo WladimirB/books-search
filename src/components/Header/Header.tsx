@@ -83,7 +83,7 @@ function validation() {
 export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
   const { state, handlers } = FormLib.useFormState<ISearchData>({
     initialState: {
-      category: 'poetry',
+      category: 'all',
       order: 'newest',
     },
   })
@@ -127,7 +127,7 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
               <Select
                 options={[
                   { value: 'newest', label: 'Newest' },
-                  { value: 'revelance', label: 'Revelance' },
+                  { value: 'relevance', label: 'Relevance' },
                 ]}
               />
             </FormLib.FormItem>

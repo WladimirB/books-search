@@ -3,10 +3,10 @@ import { baseTheme } from './theme'
 
 export default createGlobalStyle`
   :root {
-    --app-primary: #0497EA;
-    --app-success: #52c41a;
-    --app-warning: #faad14;
-    --app-error: #f5222d;
+    --app-primary: ${baseTheme.colors.primary};
+    --app-success: ${baseTheme.colors.success};
+    --app-warning: ${baseTheme.colors.warning};
+    --app-danger: ${baseTheme.colors.danger};
   }
 
   body {

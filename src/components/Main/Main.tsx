@@ -9,6 +9,7 @@ import ConnectedButton from '../ConnectedButton'
 import { baseTheme } from 'styles/theme'
 import { useAppDispatch } from 'hooks/useStoreHooks'
 import { loadMore } from 'store/books/actions'
+import ClipLoader from 'react-spinners/ClipLoader'
 
 const MainContainer = styled(Container)`
   padding-top: 15px;
@@ -43,9 +44,15 @@ const Row = styled.div`
 `
 
 const Col = styled.div`
-  width: 33.3%;
+  width: 100%;
+  ${media(breakPoints.md, `width: 50%;`)}
+  ${media(breakPoints.lg, `width: 33.3%;`)}
   padding: 0 10px;
 `
+
+const override: React.CSSProperties = {
+  borderWidth: '5px',
+}
 
 export const Main: React.FC = () => {
   const isLoading = useSelector(selectors.isBooksLoading)
@@ -63,7 +70,16 @@ export const Main: React.FC = () => {
   return (
     <MainContainer>
       <BooksCounter />
-      {showLoading && <Center>{'Loading'}</Center>}
+      {showLoading && (
+        <Center>
+          <ClipLoader
+            color={baseTheme.colors.primary}
+            size={50}
+            cssOverride={override}
+            loading={isLoading}
+          />
+        </Center>
+      )}
       {books.length > 0 && (
         <Row>
           {books.map((book, index) => (
