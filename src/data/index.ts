@@ -3,10 +3,12 @@ import store from 'store'
 import { showError } from 'store/snackbar/actions'
 import { IBookModel } from './models/booksModel'
 
+export type TOrder = 'newest' | 'revelance'
+
 interface IParams {
   search: string
   subject?: string
-  orderBy: 'newest' | 'revelance'
+  orderBy: TOrder
   page: number
 }
 
@@ -15,7 +17,7 @@ interface GetBooksResponse {
   items: IBookModel[]
 }
 
-const offset = 40
+const offset = 30
 const baseUrl = 'https://www.googleapis.com/books/v1/volumes'
 
 const instance = axios.create({
@@ -52,7 +54,8 @@ export const getBooks = (params: IParams): Promise<AxiosResponse<GetBooksRespons
     params: {
       q: `${search}${subject ? '+subject:' + subject : ''}`,
       maxResults: offset,
-      startIndex: page > 1 ? offset * (page - 1) : 0,
+      // eslint-disable-next-line prettier/prettier
+      'startIndex': page > 1 ? offset * (page - 1) - 1 : 0,
       orderBy,
     },
   })

@@ -10,6 +10,7 @@ export interface IFormContext<T extends {} = {}> {
     updateValues: <T>({ name, value }: { name: string; value: T }) => void
   }
   errors: IErrors<T> | undefined
+  allowElements: string[]
 }
 
 export const FormContext = React.createContext<IFormContext>({
@@ -19,23 +20,27 @@ export const FormContext = React.createContext<IFormContext>({
     updateValues: () => console.error('not initialized'),
   },
   errors: {},
+  allowElements: [],
 })
 
-interface IFormProps extends React.PropsWithChildren {
+interface IFormProps<T> {
   formEntity: ReturnType<typeof useFormState>
-  onSubmit?: <T>(state: T) => void
+  onSubmit?: (state: T) => void
   onReset?: () => void
   className?: string
   useValdation?: () => Struct<any, unknown>
+  children: React.ReactNode
+  allowElements?: string[]
 }
 
-export const Form: React.FC<IFormProps> = ({
+export const Form = <T extends object>({
   children,
   formEntity,
   onSubmit,
   useValdation,
+  allowElements,
   ...restProps
-}) => {
+}: IFormProps<T>) => {
   const [errors, setErrors] = React.useState<IErrors<keyof typeof formEntity.state>>(undefined)
   const validationSchema = useValdation?.()
 
@@ -43,7 +48,7 @@ export const Form: React.FC<IFormProps> = ({
     ev.preventDefault()
     const isValid = validationSchema ? validate() : true
     if (isValid) {
-      onSubmit?.(formEntity.state)
+      onSubmit?.(formEntity.state as T)
     }
   }
 
@@ -74,7 +79,7 @@ export const Form: React.FC<IFormProps> = ({
   }, [formEntity.state, validationSchema])
 
   return (
-    <FormContext.Provider value={{ ...formEntity, errors }}>
+    <FormContext.Provider value={{ ...formEntity, errors, allowElements: allowElements || [] }}>
       <form onSubmit={submit} {...restProps}>
         {children}
       </form>

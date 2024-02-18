@@ -6,7 +6,7 @@ import { lighten, darken } from 'polished'
 
 type TButtonType = 'primary' | 'dark' | 'warning' | 'success' | 'danger'
 
-interface IButtonProps extends IUIProps {
+export interface IButtonProps extends IUIProps {
   type: 'submit' | 'button'
   variant?: TButtonType
   color?: string
@@ -29,7 +29,7 @@ const Styled = styled.button<{ $variant: TButtonType; $color: string }>`
 
   &:disabled {
     background-color: ${(props) =>
-      darken(0.3, baseTheme.colors[props.$variant as keyof typeof baseTheme.colors])};
+      darken(0.15, baseTheme.colors[props.$variant as keyof typeof baseTheme.colors])};
     color: ${(props) => darken(0.3, props.$color)};
   }
 
@@ -51,6 +51,7 @@ export const Button: React.FC<IButtonProps> = ({
   children,
   type,
   disabled,
+  ...rest
 }) => {
   const click = (ev: React.SyntheticEvent) => {
     onClick && onClick(ev)
@@ -62,6 +63,7 @@ export const Button: React.FC<IButtonProps> = ({
       $color={color || baseTheme.colors.white}
       $variant={variant || 'primary'}
       disabled={disabled}
+      {...rest}
     >
       {children}
     </Styled>

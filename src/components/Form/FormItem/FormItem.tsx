@@ -8,12 +8,6 @@ const Styled = styled.div`
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
-
-  // .form__validation-error {
-  //   color: ${baseTheme.colors.danger};
-  //   opacity: 0;
-  //   transition: opacity 0.3s ease-in-out;
-  // }
 `
 
 const FormItemFooter = styled.div<{ $opacity: 0 | 1 }>`
@@ -38,11 +32,14 @@ export interface IInputProps {
 const allowedTags = ['input', 'select', 'checkbox', 'button']
 const allowedElements = ['Input', 'Select', 'Button']
 
-const getChildren = (child: React.ReactElement) => {
+const getChildren = (child: React.ReactElement, allow: Array<string> = []) => {
   if (typeof child !== 'string' && typeof child !== 'number') {
     if (typeof child.type === 'string' && allowedTags.includes(child.type)) {
       return child
-    } else if (typeof child.type === 'function' && allowedElements.includes(child.type.name)) {
+    } else if (
+      typeof child.type === 'function' &&
+      allowedElements.concat(allow).includes(child.type.name)
+    ) {
       return child
     } else {
       // eslint-disable-next-line no-console
@@ -57,7 +54,7 @@ const getChildren = (child: React.ReactElement) => {
 }
 
 export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...rest }) => {
-  const { state, handlers, errors } = React.useContext<IFormContext>(FormContext)
+  const { state, handlers, errors, allowElements } = React.useContext<IFormContext>(FormContext)
 
   const value = state?.[name as keyof typeof state] || null
   const error = errors?.[name as keyof typeof errors]
@@ -69,7 +66,7 @@ export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...r
     invalid: !!error,
   }
 
-  const child = getChildren(children)
+  const child = getChildren(children, allowElements)
   const element = child
     ? name === 'submit'
       ? child

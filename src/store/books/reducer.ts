@@ -2,12 +2,13 @@ import { AppAction } from 'store/type'
 
 import * as actionTypes from './action_types'
 import { IBookModel } from 'data/models/booksModel'
+import { TOrder } from 'data'
 
 export interface IBooksState {
   filter: {
     search: string
-    category?: string
-    order?: string
+    category: string
+    order: TOrder
   }
   error?: Error | null
   isLoading: boolean
@@ -20,7 +21,7 @@ const initialState = {
   filter: {
     search: '',
     category: 'all',
-    order: 'newest',
+    order: 'newest' as TOrder,
   },
   error: null,
   isLoading: false,
@@ -39,7 +40,7 @@ export const booksReducer = (
     case actionTypes.LOADING:
       return { ...state, isLoading: true }
     case actionTypes.LOADED_ERROR:
-      return { ...state, isLoading: false, error: action.error }
+      return { ...state, isLoading: false, error: action.error, totalCount: null }
     case actionTypes.LOADED_SUCCESS:
       return {
         ...state,

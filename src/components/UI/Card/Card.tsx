@@ -29,6 +29,11 @@ const Author = styled.h4`
   font-size: 18px;
   color: #42341;
   font-weight: 500;
+  margin: 0;
+`
+
+const Spacer = styled.div`
+  flex-grow: 1;
 `
 
 export const Card: React.FC<ICardProps> = ({ image, authors, categories, title }) => {
@@ -36,6 +41,7 @@ export const Card: React.FC<ICardProps> = ({ image, authors, categories, title }
     <CardWrapper>
       <img src={image} alt={title} />
       <Title>{title}</Title>
+      <Spacer />
       {authors.map((author) => (
         <Author key={author}>{author}</Author>
       ))}

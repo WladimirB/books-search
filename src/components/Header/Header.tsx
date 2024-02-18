@@ -5,12 +5,14 @@ import styled from 'styled-components'
 import FormLib from '../Form'
 
 import HeaderBg from 'assets/images/header.jpg'
-import { Container, Button } from '../UI'
+import { Container } from '../UI'
 import { object, string, define, optional } from 'superstruct'
 import { searchBooks } from 'store/books/actions'
 import { useAppDispatch } from 'hooks/useStoreHooks'
 import { breakPoints, media } from 'styles/breakpoints'
 import { baseTheme } from 'styles/theme'
+import ConnectedButton from '../ConnectedButton'
+import { selectors } from 'store'
 
 const { Input, Select } = FormLib
 
@@ -93,12 +95,13 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
         <Container className='form-container'>
           <h1>Search for books</h1>
           <FormLib.Form
-            onSubmit={(val) => {
-              dispatch(searchBooks(val as ISearchData))
+            onSubmit={(val: ISearchData) => {
+              dispatch(searchBooks(val))
             }}
             className='header-form'
             formEntity={{ state, handlers }}
             useValdation={validation}
+            allowElements={['ConnectedButton']}
           >
             <FormLib.FormItem
               className='header-form__item header-form__item_full-width'
@@ -130,7 +133,13 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
             </FormLib.FormItem>
             <div className='header-form__item header-form__item_full-width'>
               <FormLib.FormItem name='submit'>
-                <Button type='submit'>Search</Button>
+                <ConnectedButton
+                  selector={selectors.isBooksLoading}
+                  type='submit'
+                  style={{ minWidth: 150 }}
+                >
+                  Search
+                </ConnectedButton>
               </FormLib.FormItem>
             </div>
           </FormLib.Form>

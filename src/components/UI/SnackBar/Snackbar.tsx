@@ -34,10 +34,9 @@ const Styled = styled.div<{
   background-color: ${(props) => 'var(--app-' + props.$type + ')'};
   color: ${(props) => props.$color || '#ffffff'};
   height: auto;
-  width: ${(props) => (props.$isShow ? '100%' : 0)};
-  float: right;
   border-radius: ${(props) => (props.$radius || 8) + 'px'};
-  transition: width ease-in-out 0.5s;
+  transition: transform ease-in-out 0.5s;
+  transform: translateX(${(props) => (props.$isShow ? '0' : '150%')});
   box-sizing: border-box;
   overflow: hidden;
   position: relative;
@@ -66,10 +65,8 @@ const StyledContainer = styled.div<{
   ${(props) => `${props.$position}: ${props.$offset || 15}px;`}
   width: 100%;
   z-index: ${(props) => (props.$isHidden ? '-1' : props.$zIndex || 'auto')};
-
-  .container {
-    padding: 0;
-  }
+  opacity: ${(props) => (props.$isHidden ? '0' : '1')};
+  transition: opacity ease-in-out 0.5s;
 `
 
 const Button = styled.button<{ $padding?: number }>`
@@ -138,6 +135,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
   }, [isShow])
 
   useEffect(() => {
+    setIsHidden(false)
     setContent((prev) => {
       if (children) {
         return children
@@ -197,7 +195,7 @@ export const Snackbar: React.FC<SnackbarProps> = ({
 }
 
 Snackbar.defaultProps = {
-  duration: 1500,
+  duration: 2000,
   color: '#ffffff',
   radius: 8,
   elevation: 2,

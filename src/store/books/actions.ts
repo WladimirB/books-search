@@ -1,13 +1,25 @@
 import * as actionTypes from './action_types'
 import { DispatchType } from '../type'
 import { RootState } from 'store'
-import { getBooks } from 'data'
+import { TOrder, getBooks } from 'data'
 import { IBookModel } from 'data/models/booksModel'
+import { showWarning } from 'store/snackbar/actions'
 
 interface IFilter {
   search: string
-  order: 'newest' | 'revelance'
+  order: TOrder
   category: string
+}
+
+class LoadMoreError extends Error {
+  message: string
+  constructor() {
+    const msg = 'Error occur when tryin to load more books'
+    super(msg)
+    this.message = msg
+
+    Object.setPrototypeOf(this, LoadMoreError.prototype)
+  }
 }
 
 export const loading = () => ({ type: actionTypes.LOADING })
@@ -35,11 +47,17 @@ const loadBooks = (fiter: IFilter) => {
         subject: fiter.category === 'all' ? undefined : fiter.category,
         page,
       })
-      console.log('r', response.data)
       const { items = [], totalItems = 0 } = response.data
+      const prevTotal = getState().books.totalCount
+      if (prevTotal && prevTotal > totalItems) {
+        throw new LoadMoreError()
+      }
       dispatch(success({ items, totalCount: totalItems }))
-    } catch (error: any) {
-      dispatch(error(error))
+    } catch (err: any) {
+      if (err instanceof LoadMoreError) {
+        dispatch(showWarning(err.message))
+      }
+      dispatch(error(err))
     }
   }
 }
@@ -51,4 +69,12 @@ export const searchBooks = (filter: IFilter) => {
   }
 }
 
-export const nextPage = () => ({ type: actionTypes.NEXT_PAGE })
+const nextPage = () => ({ type: actionTypes.NEXT_PAGE })
+
+export const loadMore = () => {
+  return (dispatch: DispatchType, getState: () => RootState) => {
+    dispatch(nextPage())
+    const filter: IFilter = getState().books.filter
+    dispatch(loadBooks(filter))
+  }
+}
