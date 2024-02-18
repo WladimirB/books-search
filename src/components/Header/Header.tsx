@@ -5,21 +5,24 @@ import styled from 'styled-components'
 import FormLib from '../Form'
 
 import HeaderBg from 'assets/images/header.jpg'
-import { Container } from '../UI'
+import { Container, Button } from '../UI'
 import { object, string, define, optional } from 'superstruct'
 import { searchBooks } from 'store/books/actions'
 import { useAppDispatch } from 'hooks/useStoreHooks'
+import { breakPoints, media } from 'styles/breakpoints'
+import { baseTheme } from 'styles/theme'
 
 const { Input, Select } = FormLib
 
 const Styled = styled.header`
-  padding: 30px 0;
   width: 100%;
-  min-height: 200px;
   color: #fff;
-  background: url(${HeaderBg}) center / 100% auto no-repeat;
+  background: url(${HeaderBg}) center / auto 100% no-repeat;
+
+  ${media(breakPoints.md, `background: url(${HeaderBg}) center / 100% auto no-repeat;`)}
 
   .form-container {
+    padding: 30px 15px;
     max-width: 800px;
   }
 
@@ -27,18 +30,32 @@ const Styled = styled.header`
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    row-gap: 10px;
     margin: 0 -10px;
 
     &__item {
-      width: 50%;
+      width: 100%;
       padding: 0 10px;
+
+      ${media(breakPoints.lg, `width: 50%;`)}
 
       &_full-width {
         width: 100%;
       }
     }
+
+    button {
+      margin-top: ${baseTheme.padding.input}px;
+      min-width: calc(100vw - ${baseTheme.padding.container * 2}px);
+
+      ${media(breakPoints.lg, `min-width: unset;`)}
+    }
   }
+`
+
+const Overlay = styled.div`
+  height: 100%;
+  width: inherit;
+  background-color: rgba(0, 0, 0, 0.5);
 `
 
 interface ISearchData {
@@ -72,50 +89,53 @@ export const Header: React.FC<IHeaderProps> = ({ className, style }) => {
 
   return (
     <Styled className={className} style={style}>
-      <Container className='form-container'>
-        <FormLib.Form
-          onSubmit={(val) => {
-            dispatch(searchBooks(val as ISearchData))
-          }}
-          className='header-form'
-          formEntity={{ state, handlers }}
-          useValdation={validation}
-        >
-          <FormLib.FormItem
-            className='header-form__item header-form__item_full-width'
-            name='search'
-            label='Search'
+      <Overlay>
+        <Container className='form-container'>
+          <h1>Search for books</h1>
+          <FormLib.Form
+            onSubmit={(val) => {
+              dispatch(searchBooks(val as ISearchData))
+            }}
+            className='header-form'
+            formEntity={{ state, handlers }}
+            useValdation={validation}
           >
-            <Input />
-          </FormLib.FormItem>
-          <FormLib.FormItem className='header-form__item' name='category' label='Category'>
-            <Select
-              options={[
-                { value: 'all', label: 'All' },
-                { value: 'art', label: 'Art' },
-                { value: 'biography', label: 'Biography' },
-                { value: 'computers', label: 'Computers' },
-                { value: 'history', label: 'History' },
-                { value: 'medical', label: 'Medical' },
-                { value: 'poetry', label: 'Poetry' },
-              ]}
-            />
-          </FormLib.FormItem>
-          <FormLib.FormItem className='header-form__item' name='order' label='Order'>
-            <Select
-              options={[
-                { value: 'newest', label: 'Newest' },
-                { value: 'revelance', label: 'Revelance' },
-              ]}
-            />
-          </FormLib.FormItem>
-          <div className='header-form__item'>
-            <FormLib.FormItem name='submit'>
-              <button type='submit'>Search</button>
+            <FormLib.FormItem
+              className='header-form__item header-form__item_full-width'
+              name='search'
+              label='Search'
+            >
+              <Input />
             </FormLib.FormItem>
-          </div>
-        </FormLib.Form>
-      </Container>
+            <FormLib.FormItem className='header-form__item' name='category' label='Category'>
+              <Select
+                options={[
+                  { value: 'all', label: 'All' },
+                  { value: 'art', label: 'Art' },
+                  { value: 'biography', label: 'Biography' },
+                  { value: 'computers', label: 'Computers' },
+                  { value: 'history', label: 'History' },
+                  { value: 'medical', label: 'Medical' },
+                  { value: 'poetry', label: 'Poetry' },
+                ]}
+              />
+            </FormLib.FormItem>
+            <FormLib.FormItem className='header-form__item' name='order' label='Order'>
+              <Select
+                options={[
+                  { value: 'newest', label: 'Newest' },
+                  { value: 'revelance', label: 'Revelance' },
+                ]}
+              />
+            </FormLib.FormItem>
+            <div className='header-form__item header-form__item_full-width'>
+              <FormLib.FormItem name='submit'>
+                <Button type='submit'>Search</Button>
+              </FormLib.FormItem>
+            </div>
+          </FormLib.Form>
+        </Container>
+      </Overlay>
     </Styled>
   )
 }

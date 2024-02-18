@@ -1,0 +1,38 @@
+export const baseTheme = {
+  colors: {
+    secondary: '#2b2b2b',
+    success: '#4caf50',
+    danger: '#f44336 ',
+    dark: '#515151',
+    primary: '#0497EA',
+    warning: '#faad14',
+    main: '#e5e4e8',
+    font: '#19191B',
+    white: '#ffffff',
+    paper: '#f3f6f9',
+    black: '#333333',
+    input: '#bbbbbb',
+  },
+  sizes: {
+    header: { height: 56 },
+    footer: { height: 128 },
+  },
+  fontSizes: {
+    body: 18,
+    h1: 48,
+    h2: 32,
+    h3: 24,
+    small: 14,
+  },
+  padding: {
+    container: 15,
+    button: 8,
+    input: 8,
+    label: 8,
+    footer: 30,
+    header: 30,
+    card: 20,
+    col: 20,
+  },
+  borderRadius: 8,
+}

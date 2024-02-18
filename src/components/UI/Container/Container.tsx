@@ -1,7 +1,7 @@
 import { IUIProps } from 'components/types'
 import React from 'react'
 import styled from 'styled-components'
-import { getBreakPoint } from 'utils/breakpoints'
+import { getBreakPoint } from 'styles/breakpoints'
 import { replaceSameClasses } from 'utils/replaceSameClasses'
 
 export interface IContainerProps extends IUIProps {

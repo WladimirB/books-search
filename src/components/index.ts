@@ -1,3 +1,5 @@
 export { default as Header } from './Header'
 export { default as Main } from './Main'
 export { default as AppSnackbar } from './AppSnackbar'
+export { default as BooksCounter } from './BooksCounter'
+export { default as Footer } from './Footer'

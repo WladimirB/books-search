@@ -3,9 +3,13 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import { selectors } from 'store'
 import styled from 'styled-components'
+import BooksCounter from '../BooksCounter'
+import { breakPoints, media } from 'styles/breakpoints'
 
 const MainContainer = styled(Container)`
   padding: 15px;
+  min-height: calc(100vh - 455px - 82px);
+  ${media(breakPoints.lg, `min-height: calc(100vh - 376px - 82px);`)}
 `
 
 const Center = styled.div`
@@ -37,6 +41,7 @@ export const Main: React.FC = () => {
 
   return (
     <MainContainer>
+      <BooksCounter />
       {showLoading && <Center>{'Loading'}</Center>}
       {books.length > 0 && (
         <Row>

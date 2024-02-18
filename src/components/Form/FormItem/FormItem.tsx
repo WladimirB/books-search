@@ -2,15 +2,25 @@ import { IUIProps } from 'components/types'
 import React from 'react'
 import styled from 'styled-components'
 import { FormContext, IFormContext } from '../FormRoot/Form'
+import { baseTheme } from 'styles/theme'
 
 const Styled = styled.div`
   display: inline-flex;
   flex-direction: column;
   justify-content: flex-start;
 
-  .form__validation-error {
-    color: red;
-  }
+  // .form__validation-error {
+  //   color: ${baseTheme.colors.danger};
+  //   opacity: 0;
+  //   transition: opacity 0.3s ease-in-out;
+  // }
+`
+
+const FormItemFooter = styled.div<{ $opacity: 0 | 1 }>`
+  min-height: ${baseTheme.fontSizes.small + baseTheme.padding.input}px;
+  color: ${baseTheme.colors.danger};
+  opacity: ${(props) => props.$opacity};
+  transition: opacity 0.3s ease-in-out;
 `
 
 interface IFormItemProps extends Omit<IUIProps, 'children'> {
@@ -22,10 +32,11 @@ interface IFormItemProps extends Omit<IUIProps, 'children'> {
 export interface IInputProps {
   value: string
   onChange: (value: string) => void
+  invalid?: boolean
 }
 
 const allowedTags = ['input', 'select', 'checkbox', 'button']
-const allowedElements = ['Input', 'Select']
+const allowedElements = ['Input', 'Select', 'Button']
 
 const getChildren = (child: React.ReactElement) => {
   if (typeof child !== 'string' && typeof child !== 'number') {
@@ -55,6 +66,7 @@ export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...r
   const injectionProps: IInputProps = {
     value,
     onChange: handleChange,
+    invalid: !!error,
   }
 
   const child = getChildren(children)
@@ -72,7 +84,9 @@ export const FormItem: React.FC<IFormItemProps> = ({ label, name, children, ...r
     <Styled {...rest}>
       {label && <label>{label}</label>}
       {element}
-      {errors && <small className='form__validation-error'>{error}</small>}
+      <FormItemFooter $opacity={error ? 1 : 0}>
+        <small>{error}</small>
+      </FormItemFooter>
     </Styled>
   )
 }

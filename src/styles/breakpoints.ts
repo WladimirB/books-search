@@ -20,3 +20,9 @@ export function getBreakPoint(brekpoint: any) {
     return null
   }
 }
+
+export function media(minWidth: number, rules: string) {
+  return `@media screen and (min-width: ${minWidth}px) {
+    ${rules}
+  }`
+}

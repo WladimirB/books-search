@@ -6,7 +6,7 @@ import { createPortal } from 'react-dom'
 import { CancelToken, delay } from 'utils/delay'
 import { ReactComponent as Close } from 'assets/images/close-icon.svg'
 
-export type TSnackbarType = 'primary' | 'success' | 'error' | 'warning'
+export type TSnackbarType = 'primary' | 'success' | 'danger' | 'warning'
 type TSnackbarPosition = 'top' | 'bottom'
 
 export interface SnackbarProps {

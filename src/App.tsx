@@ -1,26 +1,13 @@
-import { AppSnackbar, Header, Main } from './components'
+import { AppSnackbar, Header, Main, Footer } from './components'
 import { Provider } from 'react-redux'
 import store from './store'
-import { createGlobalStyle, ThemeProvider } from 'styled-components'
+import { ThemeProvider } from 'styled-components'
+import GlobalStyle from 'styles/gloabal'
 
-const GlobalStyle = createGlobalStyle<{ $whiteColor?: boolean }>`
-  :root {
-    --app-primary: #0497EA;
-    --app-success: #52c41a;
-    --app-warning: #faad14;
-    --app-error: #f5222d;
-  }
-
-  body {
-    font-family: ${(props) => props.theme.fontFamily};
-    font-size: 18px;
-    margin: 0;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-`
+// const colorBlack = '#333333'
+// const blackAlter = '#515151'
+// const colorPrimary = '#5595e8'
+// const textColor = '#bebebe'
 
 const App = () => {
   return (
@@ -31,6 +18,7 @@ const App = () => {
           <AppSnackbar></AppSnackbar>
           <Header></Header>
           <Main></Main>
+          <Footer>&copy; 2024</Footer>
         </div>
       </Provider>
     </ThemeProvider>

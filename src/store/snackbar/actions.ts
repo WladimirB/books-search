@@ -11,7 +11,7 @@ export const showWarning = (message: string) => ({
 export const showError = (message: string) => ({
   type: actionTypes.SHOW_SNACKBAR,
   payload: {
-    type: 'error',
+    type: 'danger',
     message,
   },
 })

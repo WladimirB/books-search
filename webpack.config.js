@@ -77,7 +77,8 @@ module.exports = {
       assets: path.resolve(__dirname, './src/assets'),
       store: path.resolve(__dirname, './src/store'),
       hooks: path.resolve(__dirname, './src/hooks'),
-      data: path.resolve(__dirname, './src/data')
+      data: path.resolve(__dirname, './src/data'),
+      styles: path.resolve(__dirname, './src/styles')
     },
     extensions: ['*', '.js', '.jsx', '.ts', '.tsx']
   },
